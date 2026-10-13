@@ -2,7 +2,7 @@ local ObsErrorLog = {}
 local function ObsReportError(Kind, Message, Trace)
     pcall(function()
         local genv = type(getgenv) == "function" and getgenv() or _G
-        local Report = genv and rawget(genv, "__NetherwareReport")
+        local Report = genv and rawget(genv, "__AzureReport")
         if type(Report) == "function" then
             Report(Kind, Message, Trace)
         end
@@ -95,12 +95,12 @@ do
     function ColorClipboard.Recents()
         local List = nil
         pcall(function()
-            List = getgenv().__ObsidianRecentColors
+            List = getgenv().__AzureRecentColors
         end)
         if type(List) ~= "table" then
             List = {}
             pcall(function()
-                getgenv().__ObsidianRecentColors = List
+                getgenv().__AzureRecentColors = List
             end)
         end
         return List
@@ -128,7 +128,7 @@ do
         local Store = { Color, Transparency or 0 }
         Library.CopiedColor = Store
         pcall(function()
-            getgenv().__ObsidianCopiedColor = Store
+            getgenv().__AzureCopiedColor = Store
         end)
         local Wrote = false
         if setclipboard then
@@ -148,7 +148,7 @@ do
         local Store = Library.CopiedColor
         if not Store then
             pcall(function()
-                Store = getgenv().__ObsidianCopiedColor
+                Store = getgenv().__AzureCopiedColor
             end)
         end
         if type(Store) == "table" and typeof(Store[1]) == "Color3" then
@@ -186,12 +186,12 @@ local Toggles = {}
 local Options = {}
 local Tooltips = {}
 
-local BaseURL = "https://netherware.xyz/obsidian/"
+local BaseURL = "https://raw.githubusercontent.com/swrenic/ui/main/"
 local CustomImageManager = {}
 local CustomImageManagerAssets = {
     TransparencyTexture = {
         RobloxId = 0,
-        Path = "Obsidian/assets/TransparencyTexture.png",
+        Path = "Azure/assets/TransparencyTexture.png",
         URL = BaseURL .. "assets/TransparencyTexture.png",
 
         Id = nil,
@@ -199,7 +199,7 @@ local CustomImageManagerAssets = {
 
     SaturationMap = {
         RobloxId = 0,
-        Path = "Obsidian/assets/SaturationMap.png",
+        Path = "Azure/assets/SaturationMap.png",
         URL = BaseURL .. "assets/SaturationMap.png",
 
         Id = nil,
@@ -207,7 +207,7 @@ local CustomImageManagerAssets = {
 
     LoadingIcon = {
         RobloxId = 97544096941083,
-        Path = "Obsidian/assets/LoadingIcon.png",
+        Path = "Azure/assets/LoadingIcon.png",
         URL = BaseURL .. "assets/LoadingIcon.png",
 
         Id = nil,
@@ -215,7 +215,7 @@ local CustomImageManagerAssets = {
 
     CheckIcon = {
         RobloxId = 97682394690683,
-        Path = "Obsidian/assets/CheckIcon.png",
+        Path = "Azure/assets/CheckIcon.png",
         URL = BaseURL .. "assets/CheckIcon.png",
 
         Id = nil,
@@ -259,7 +259,7 @@ do
 
         CustomImageManagerAssets[AssetName] = {
             RobloxId = RobloxAssetId,
-            Path = string.format("Obsidian/custom_assets/%s", AssetName),
+            Path = string.format("Azure/custom_assets/%s", AssetName),
             URL = URL,
 
             Id = nil,
@@ -343,7 +343,7 @@ local Library = {
     DevicePlatform = nil,
     IsMobile = false,
 
-    --// Obsidian Windows \\--
+    --// Azure Windows \\--
     ScreenGui = nil,
     Window = nil,
     WindowContainer = nil,
@@ -1618,7 +1618,7 @@ type IconModule = {
 
 local FetchIcons, Icons = pcall(function()
     return (loadstring(
-        game:HttpGet("https://netherware.xyz/obsidian/lucide-source.lua")
+        game:HttpGet("https://raw.githubusercontent.com/swrenic/ui/main/lucide-source.lua")
     ) :: () -> IconModule)()
 end)
 
@@ -1810,7 +1810,7 @@ local function SetAlwaysOnTop(Gui: ScreenGui, Enabled: boolean)
 end
 
 local ScreenGui = New("ScreenGui", {
-    Name = "Obsidian",
+    Name = "Azure",
     DisplayOrder = 998,
     ResetOnSpawn = false,
 })
@@ -3687,7 +3687,7 @@ function Library:_ensureSmoothScroll()
 
     pcall(function()
         local Actions = game:GetService("ContextActionService")
-        Actions:BindActionAtPriority("ObsidianSmoothScroll" .. tostring(Library.ShowCursorBinding), ObsGuard(function()
+        Actions:BindActionAtPriority("AzureSmoothScroll" .. tostring(Library.ShowCursorBinding), ObsGuard(function()
             if Library.Unloaded or Library:MouseIsOverMenu() then
                 return Enum.ContextActionResult.Pass
             end
@@ -3695,7 +3695,7 @@ function Library:_ensureSmoothScroll()
         end), false, 3000, Enum.UserInputType.MouseWheel)
         table.insert(Library.UnloadSignals, function()
             pcall(function()
-                Actions:UnbindAction("ObsidianSmoothScroll" .. tostring(Library.ShowCursorBinding))
+                Actions:UnbindAction("AzureSmoothScroll" .. tostring(Library.ShowCursorBinding))
             end)
         end)
     end)
@@ -4942,7 +4942,7 @@ function Library:GetNotifySound(Name)
     end
 
     local File = Name:lower()
-    local Path = "Obsidian/assets/sounds/" .. File .. "-v2.mp3"
+    local Path = "Azure/assets/sounds/" .. File .. "-v2.mp3"
 
     local function SoundBytesOk(Bytes)
         if type(Bytes) ~= "string" or #Bytes < 500 then
@@ -4956,9 +4956,9 @@ function Library:GetNotifySound(Name)
 
     local Ok, Id = pcall(function()
         if type(makefolder) == "function" then
-            pcall(makefolder, "Obsidian")
-            pcall(makefolder, "Obsidian/assets")
-            pcall(makefolder, "Obsidian/assets/sounds")
+            pcall(makefolder, "Azure")
+            pcall(makefolder, "Azure/assets")
+            pcall(makefolder, "Azure/assets/sounds")
         end
 
         local Cached = false
@@ -4970,7 +4970,7 @@ function Library:GetNotifySound(Name)
             end
         end
         if not Cached then
-            local Data = game:HttpGet("https://netherware.xyz/obsidian/assets/sounds/" .. File .. ".mp3?v=2")
+            local Data = game:HttpGet("https://raw.githubusercontent.com/swrenic/ui/main/assets/sounds/" .. File .. ".mp3?v=2")
             if not SoundBytesOk(Data) then
                 error("download failed")
             end
@@ -11688,7 +11688,7 @@ do
             Dropdown.ApplyKeyHighlight()
         end
 
-        local KeyActionName = "ObsidianDropdownKeys" .. tostring(math.random(1, 1e9))
+        local KeyActionName = "AzureDropdownKeys" .. tostring(math.random(1, 1e9))
         function Dropdown.SetKeyboard(Active)
             if Dropdown.KeyConn then
                 Dropdown.KeyConn:Disconnect()
@@ -19058,7 +19058,7 @@ function Library:CreateWindow(WindowInfo)
         return Dialog
     end
 
-    -- Obsidian-style toggle fade (ported from upstream deividcomsono/Obsidian): tween the transparency
+    -- Azure-style toggle fade (ported from upstream deividcomsono/Azure): tween the transparency
     -- of every MainFrame descendant on open/close (0.35s Quad Out), caching each element's visible value.
     local _tvlTransCache = {}
     local _tvlWindowAnimInfo = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
@@ -20153,7 +20153,7 @@ function Library:CreateLoading(LoadingInfo)
 
     --// ScreenGui \\--
     local ScreenGui = New("ScreenGui", {
-        Name = "ObsidianLoading",
+        Name = "AzureLoading",
         DisplayOrder = 999,
         ResetOnSpawn = false
     })
